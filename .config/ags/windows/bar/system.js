@@ -39,7 +39,7 @@ export const ModuleSystem = () => Widget.EventBox({
                             }),
                         ],
                     }),
-                    Widget.Box({ // Battery
+                    /* Widget.Box({ // Battery
                         vpack: 'center',
                         hexpand: true,
                         className: 'spacing-h-5 bar-batt',
@@ -81,7 +81,7 @@ export const ModuleSystem = () => Widget.EventBox({
                                 }]],
                             }),
                         ],
-                    }),
+                    }), */
                 ],
             }),
         ]
