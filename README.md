@@ -1,6 +1,8 @@
+## Note
+Please open pull requests on the [original repo](https://github.com/end-4/dots-hyprland/tree/illogical-impulse) for any issues unless they are specific to the changes made in this fork.
+
 <div align="center">
     <h1>「 illogical_impulse 」</h1>
-    <h3> Next-level hype with AGS </h3>
 </div>
 
 ## Description
