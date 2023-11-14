@@ -16,7 +16,7 @@ Please open pull requests on the [original repo](https://github.com/end-4/dots-h
 
 ## Instructions
 - Notes:
-  - Currently using AGS 1.5.0. Breaking changes happen, so it's likely that you'll need the exact version
+  - Currently using AGS 1.5.1. Don't know what that version is? Just clone and compile the thing. Don't use the AUR package.
   - Recommended GTK font size: 11pt. All sizes should work, but this works best. I'll fix this later.
 - See the wiki for more detailed instructions > [illogical_impulse](https://github.com/end-4/dots-hyprland/wiki/illogical_impulse) 
 
