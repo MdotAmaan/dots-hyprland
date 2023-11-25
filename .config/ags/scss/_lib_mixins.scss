@@ -39,11 +39,12 @@ $rounding_large: 1.705rem;
 @mixin mainfont {
     // Other clean sans-serif
     font-family:
-        'AR One Sans',
         'Geist',
+        'AR One Sans',
         'Inter',
         'Roboto',
         'Noto Sans',
+        'Ubuntu',
         sans-serif;
     // font-weight: 500;
 }
@@ -59,14 +60,14 @@ $rounding_large: 1.705rem;
 @mixin icon-nerd {
     // Nerd Fonts
     font-family:
-        'SpaceMono Nerd Font',
-        'JetBrainsMono Nerd Font',
+        'SpaceMono NF', 'SpaceMono Nerd Font',
+        'JetBrains Mono NF', 'JetBrains Mono Nerd Font',
         monospace;
 }
 
 @mixin techfont {
     // Monospace for sys info n stuff. Doesn't have to be a nerd font, but it's cool.
-    font-family: 'JetBrains Mono Nerd Font', 'JetBrains Mono NL', 'SpaceMono Nerd Font', monospace;
+    font-family: 'JetBrains Mono NF', 'JetBrains Mono Nerd Font', 'JetBrains Mono NL', 'SpaceMono NF', 'SpaceMono Nerd Font', monospace;
 }
 
 @mixin subtext {
@@ -159,10 +160,10 @@ $overlay1: mix($onSurface, rgba(0, 0, 0, 0), 25%);
 $overlay2: mix($onSurface, rgba(0, 0, 0, 0), 40%);
 
 @mixin elevation-border-softer {
-    border-top: 1px solid mix($t_t_surface, $t_onSurface, 80%);
-    border-left: 1px solid mix($t_t_surface, $t_onSurface, 80%);
-    border-right: 1px solid mix($t_t_surface, $t_onSurface, 85%);
-    border-bottom: 1px solid mix($t_t_surface, $t_onSurface, 85%);
+    border-top: 1px solid mix($t_t_surface, $t_onSurface, 90%);
+    border-left: 1px solid mix($t_t_surface, $t_onSurface, 90%);
+    border-right: 1px solid mix($t_t_surface, $t_onSurface, 95%);
+    border-bottom: 1px solid mix($t_t_surface, $t_onSurface, 95%);
 }
 
 @mixin elevation-border {
