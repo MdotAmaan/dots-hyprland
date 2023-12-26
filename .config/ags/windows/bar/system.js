@@ -33,7 +33,7 @@ const barClock = Widget.Box({
     ],
 });
 
-const barBattery = Widget.Box({
+/* const barBattery = Widget.Box({
     vpack: 'center',
     hexpand: true,
     className: 'spacing-h-5 bar-batt',
@@ -75,7 +75,7 @@ const barBattery = Widget.Box({
             }]],
         }),
     ],
-});
+}); */
 
 export const ModuleSystem = () => Widget.EventBox({
     onScrollUp: () => execAsync('hyprctl dispatch workspace -1'),
@@ -87,7 +87,7 @@ export const ModuleSystem = () => Widget.EventBox({
                 className: 'bar-group bar-group-standalone bar-group-pad-system spacing-h-15',
                 children: [
                     barClock,
-                    barBattery,
+                    // barBattery,
                 ],
             }),
         ]
