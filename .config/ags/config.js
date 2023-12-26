@@ -1,25 +1,25 @@
+"strict mode";
 // Import
 import { App, Utils } from './imports.js';
-import { firstRunWelcome } from './lib/files.js';
-// Windows
-import Bar from './windows/bar/main.js';
-import Cheatsheet from './windows/cheatsheet/main.js';
-import DesktopBackground from './windows/desktopbackground/main.js';
-import Dock from './windows/dock/main.js';
-import { CornerTopleft, CornerTopright, CornerBottomleft, CornerBottomright } from './windows/screencorners/main.js';
-import Indicator from './windows/indicators/main.js';
-import Osk from './windows/onscreenkeyboard/main.js';
-import Overview from './windows/overview/main.js';
-import Session from './windows/session/main.js';
-import SideLeft from './windows/sideleft/main.js';
-import SideRight from './windows/sideright/main.js';
+import { firstRunWelcome } from './services/messages.js';
+// Widgets
+import Bar from './widgets/bar/main.js';
+import Cheatsheet from './widgets/cheatsheet/main.js';
+import DesktopBackground from './widgets/desktopbackground/main.js';
+import Dock from './widgets/dock/main.js';
+import { CornerTopleft, CornerTopright, CornerBottomleft, CornerBottomright } from './widgets/screencorners/main.js';
+import Indicator from './widgets/indicators/main.js';
+import Osk from './widgets/onscreenkeyboard/main.js';
+import Overview from './widgets/overview/main.js';
+import Session from './widgets/session/main.js';
+import SideLeft from './widgets/sideleft/main.js';
+import SideRight from './widgets/sideright/main.js';
 
-// Longer than actual anim time (150, see styles) to make sure windows animate fully
-const CLOSE_ANIM_TIME = 200;
+// Longer than actual anim time (see styles) to make sure widgets animate fully
+const CLOSE_ANIM_TIME = 210;
 
 // Init cache and check first run
 Utils.exec(`bash -c 'mkdir -p ~/.cache/ags/user/colorschemes'`);
-firstRunWelcome();
 
 // SCSS compilation
 Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`); // reset music styles
@@ -44,7 +44,7 @@ export default {
         CornerBottomleft(),
         CornerBottomright(),
         DesktopBackground(),
-        Dock(),
+        Dock(), // Buggy
         Overview(),
         Indicator(),
         Cheatsheet(),
@@ -56,9 +56,9 @@ export default {
 };
 
 // We don't want context menus of the bar's tray go under the rounded corner below,
-// So bar is returned after 1ms, making it get spawned after the corner
-// And having an Utils.timeout in that window array just gives an error
+// so bar is returned after default export, making it get spawned after the corner
+// (having an Utils.timeout in that window array just gives an error)
 // Not having it in default export is fine since we don't need to toggle it
 Bar(); 
 
-// uwu
+// uwu 

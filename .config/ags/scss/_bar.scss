@@ -327,13 +327,13 @@ $notchOnPrimary: $onPrimary;
 }
 
 .bar-music-hide-false {
-    @include md3_decel;
+    @include menu_decel;
     transition-duration: 100ms;
     opacity: 1;
 }
 
 .bar-music-hide-true {
-    @include md3_accel;
+    @include menu_accel;
     transition-duration: 100ms;
     opacity: 0;
 }
@@ -345,7 +345,8 @@ $notchOnPrimary: $onPrimary;
     min-width: 2.591rem;
 }
 
-.bar-music-btn:hover {
+.bar-music-btn:hover,
+.bar-music-btn:focus {
     background-color: $hovercolor;
 }
 
@@ -392,6 +393,15 @@ $notchOnPrimary: $onPrimary;
     min-width: 0.681rem;
     min-height: 0.681rem;
     background-color: $t_onSecondaryContainer;
+    color: $secondaryContainer;
+}
+
+.bar-batt-chargestate-charging-smaller {
+    border-radius: 10rem;
+    min-width: 0.409rem;
+    min-height: 0.409rem;
+    background-color: $t_onSecondaryContainer;
+    color: $secondaryContainer;
 }
 
 .bar-batt-chargestate-low {
@@ -433,7 +443,8 @@ $notchOnPrimary: $onPrimary;
     padding: 0rem 0.682rem;
 }
 
-.bar-space-button:hover>box:first-child {
+.bar-space-button:hover>box:first-child,
+.bar-space-button:focus>box:first-child {
     background-color: $hovercolor;
 }
 
@@ -464,7 +475,7 @@ $notchOnPrimary: $onPrimary;
 
 .bar-statusicons {
     @include full-rounding;
-    @include md3_decel;
+    @include menu_decel;
     margin: 0.2rem;
     padding: 0rem 0.614rem;
 }

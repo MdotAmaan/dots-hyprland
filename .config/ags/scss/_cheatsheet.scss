@@ -31,13 +31,14 @@
 // .cheatsheet-action {}
 
 .cheatsheet-closebtn {
-    @include md3_decel;
+    @include menu_decel;
     @include full-rounding;
     min-width: 2.386rem;
     min-height: 2.386rem;
 }
 
-.cheatsheet-closebtn:hover {
+.cheatsheet-closebtn:hover,
+.cheatsheet-closebtn:focus {
     background-color: $surfaceVariant;
 }
 
