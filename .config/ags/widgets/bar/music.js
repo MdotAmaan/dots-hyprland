@@ -1,20 +1,28 @@
 import { Service, Utils, Widget } from '../../imports.js';
 import Mpris from 'resource:///com/github/Aylur/ags/service/mpris.js';
 import Audio from 'resource:///com/github/Aylur/ags/service/audio.js';
+import Hyprland from 'resource:///com/github/Aylur/ags/service/hyprland.js';
 const { execAsync, exec } = Utils;
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { showMusicControls } from '../../variables.js';
+
+function trimTrackTitle(title) {
+    var cleanedTitle = title;
+    cleanedTitle = cleanedTitle.replace(/【[^】]*】/, '');          // Remove stuff like【C93】 at beginning
+    cleanedTitle = cleanedTitle.replace(/\[FREE DOWNLOAD\]/g, ''); // Remove F-777's [FREE DOWNLOAD]
+    return cleanedTitle.trim();
+}
 
 const TrackProgress = () => {
     const _updateProgress = (circprog) => {
         const mpris = Mpris.getPlayer('');
         if (!mpris) return;
-        // Set circular progress (font size cuz that's how this hacky circprog works)
+        // Set circular progress value
         circprog.css = `font-size: ${Math.max(mpris.position / mpris.length * 100, 0)}px;`
     }
     return AnimatedCircProg({
         className: 'bar-music-circprog',
-        vpack: 'center',
+        vpack: 'center', hpack: 'center',
         connections: [ // Update on change/once every 3 seconds
             [Mpris, _updateProgress],
             [3000, _updateProgress]
@@ -22,12 +30,12 @@ const TrackProgress = () => {
     })
 }
 
-export const ModuleMusic = () => Widget.EventBox({
-    onScrollUp: () => execAsync('hyprctl dispatch workspace -1'),
-    onScrollDown: () => execAsync('hyprctl dispatch workspace +1'),
+export const ModuleMusic = () => Widget.EventBox({ // TODO: use cairo to make button bounce smaller on click
+    onScrollUp: () => Hyprland.sendMessage(`dispatch workspace -1`),
+    onScrollDown: () => Hyprland.sendMessage(`dispatch workspace +1`),
     onPrimaryClickRelease: () => showMusicControls.setValue(!showMusicControls.value),
     onSecondaryClickRelease: () => execAsync(['bash', '-c', 'playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` &']),
-    onMiddleClickRelease: () => Mpris.getPlayer('')?.playPause(),
+    onMiddleClickRelease: () => execAsync('playerctl play-pause').catch(print),
     child: Widget.Box({
         className: 'bar-group-margin bar-sides',
         children: [
@@ -65,11 +73,11 @@ export const ModuleMusic = () => Widget.EventBox({
                     Widget.Scrollable({
                         hexpand: true,
                         child: Widget.Label({
-                            className: 'txt txt-smallie',
+                            className: 'txt-smallie txt-onSurfaceVariant',
                             connections: [[Mpris, label => {
                                 const mpris = Mpris.getPlayer('');
                                 if (mpris)
-                                    label.label = `${mpris.trackTitle} • ${mpris.trackArtists.join(', ')}`;
+                                    label.label = `${trimTrackTitle(mpris.trackTitle)} • ${mpris.trackArtists.join(', ')}`;
                                 else
                                     label.label = 'No media';
                             }]],

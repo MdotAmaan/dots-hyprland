@@ -4,6 +4,7 @@ const { exec, execAsync } = Utils;
 import Mpris from 'resource:///com/github/Aylur/ags/service/mpris.js';
 
 const { Box, EventBox, Icon, Scrollable, Label, Button, Revealer } = Widget;
+import { MarginRevealer } from '../../lib/advancedwidgets.js';
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { MaterialIcon } from '../../lib/materialicon.js';
 import { showMusicControls } from '../../variables.js';
@@ -16,7 +17,7 @@ function expandTilde(path) {
     }
 }
 
-const LIGHTDARK_FILE_LOCATION = '~/.cache/ags/user/colormode.txt'
+const LIGHTDARK_FILE_LOCATION = `${GLib.get_user_cache_dir()}/ags/user/colormode.txt`;
 const lightDark = Utils.readFile(expandTilde(LIGHTDARK_FILE_LOCATION)).trim();
 const COVER_COLORSCHEME_SUFFIX = '_colorscheme.css';
 const PREFERRED_PLAYER = 'plasma-browser-integration';
@@ -73,6 +74,12 @@ function getTrackfont(player) {
     if (title.includes('東方')) return 'Crimson Text, serif'; // Serif for Touhou stuff
     return DEFAULT_MUSIC_FONT;
 }
+function trimTrackTitle(title) {
+    var cleanedTitle = title;
+    cleanedTitle = cleanedTitle.replace(/【[^】]*】/, '');          // Remove stuff like【C93】 at beginning
+    cleanedTitle = cleanedTitle.replace(/\[FREE DOWNLOAD\]/g, ''); // Remove F-777's [FREE DOWNLOAD]
+    return cleanedTitle.trim();
+}
 
 const TrackProgress = ({ player, ...rest }) => {
     const _updateProgress = (circprog) => {
@@ -101,7 +108,7 @@ const TrackTitle = ({ player, ...rest }) => Label({
     className: 'osd-music-title',
     connections: [[player, (self) => {
         // Player name
-        self.label = player.trackTitle.length > 0 ? player.trackTitle : 'No media';
+        self.label = player.trackTitle.length > 0 ? trimTrackTitle(player.trackTitle) : 'No media';
         // Font based on track/artist
         const fontForThisTrack = getTrackfont(player);
         self.css = `font-family: ${fontForThisTrack}, ${DEFAULT_MUSIC_FONT};`;
@@ -164,7 +171,7 @@ const CoverArt = ({ player, ...rest }) => Box({
                                 `${App.configDir}/scripts/color_generation/generate_colors_material.py --path '${coverPath}' > ${App.configDir}/scss/_musicmaterial.scss ${lightDark}`])
                                 .then(() => {
                                     exec(`wal -i "${player.coverPath}" -n -t -s -e -q ${lightDark}`)
-                                    exec(`bash -c "cp ~/.cache/wal/colors.scss ${App.configDir}/scss/_musicwal.scss"`)
+                                    exec(`cp ${GLib.get_user_cache_dir()}/wal/colors.scss ${App.configDir}/scss/_musicwal.scss`);
                                     exec(`sassc ${App.configDir}/scss/_music.scss ${stylePath}`);
                                     self.css = `background-image: url('${coverPath}');`;
                                     App.applyCss(`${stylePath}`);
@@ -193,6 +200,7 @@ const TrackControls = ({ player, ...rest }) => Widget.Revealer({
         children: [
             Button({
                 className: 'osd-music-controlbtn',
+                onClicked: () => execAsync('playerctl previous').catch(print),
                 child: Label({
                     className: 'icon-material osd-music-controlbtn-txt',
                     label: 'skip_previous',
@@ -200,6 +208,9 @@ const TrackControls = ({ player, ...rest }) => Widget.Revealer({
             }),
             Button({
                 className: 'osd-music-controlbtn',
+                onClicked: () => execAsync(['bash', '-c', 'playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`'])
+                    .catch(print)
+                ,
                 child: Label({
                     className: 'icon-material osd-music-controlbtn-txt',
                     label: 'skip_next',
@@ -290,9 +301,7 @@ const PlayState = ({ player }) => {
             overlays: [
                 Widget.Button({
                     className: 'osd-music-playstate-btn',
-                    onClicked: () => {
-                        Mpris.getPlayer().playPause()
-                    },
+                    onClicked: () => execAsync('playerctl play-pause').catch(print),
                     child: Widget.Label({
                         justification: 'center',
                         hpack: 'fill',
@@ -343,9 +352,11 @@ const MusicControlsWidget = (player) => Box({
     ]
 })
 
-export default () => Widget.Revealer({
+export default () => MarginRevealer({
     transition: 'slide_down',
-    transitionDuration: 170,
+    revealChild: false,
+    showClass: 'osd-show',
+    hideClass: 'osd-hide',
     child: Box({
         connections: [[Mpris, box => {
             let foundPlayer = false;
@@ -371,7 +382,8 @@ export default () => Widget.Revealer({
     }),
     connections: [
         [showMusicControls, (revealer) => {
-            revealer.revealChild = showMusicControls.value;
+            if (showMusicControls.value) revealer._show();
+            else revealer._hide();
         }],
     ],
 })

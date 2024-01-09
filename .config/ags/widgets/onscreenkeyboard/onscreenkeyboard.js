@@ -83,7 +83,7 @@ const keyboardItself = (kbJson) => {
             children: row.map(key => {
                 return Button({
                     className: `osk-key osk-key-${key.shape}`,
-                    hexpand: (key.shape == "space" || key.shape == "expand"),
+                    hexpand: ["space", "expand"].includes(key.shape),
                     label: key.label,
                     setup: (button) => {
                         let pressed = false;
@@ -133,11 +133,11 @@ const keyboardWindow = Box({
             ],
         })
     ],
-    connections: [[App, (box, name, visible) => { // Update on open
+    setup: (self) => self.hook(App, (box, name, visible) => { // Update on open
         if (name == 'osk' && visible) {
             keyboardWindow.setCss(`margin-bottom: -0px;`);
         }
-    }],],
+    }),
 });
 
 const gestureEvBox = EventBox({ child: keyboardWindow })
